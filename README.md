@@ -104,9 +104,55 @@ Semua endpoint ada di web Wiji, di bawah `/api/v1/`. Daftar lengkap (method, aks
 
 | Bagian | Yang dipakai |
 |---|---|
-| Aplikasi mobile | Flutter, Dart, `material_ui` |
+| Aplikasi mobile | Flutter 3.47, Dart 3.13, `material_ui`, `http` |
 | Web service | Django 5.2, Django REST Framework |
 | Build APK | GitHub Release dan Bitrise |
+
+## Menjalankan Secara Lokal
+
+Butuh Flutter 3.47 (Dart 3.13) atau lebih baru. Cek pakai `flutter --version`.
+
+```bash
+git clone https://github.com/pbp-kelompok-d12/wiji-mobile.git
+cd wiji-mobile
+flutter pub get
+flutter run              # pilih emulator Android, HP, atau Chrome
+```
+
+Ngecek kode sebelum bikin PR:
+
+```bash
+flutter analyze
+flutter test
+```
+
+Bawaannya aplikasi nyambung ke server Wiji. Kalau mau nyambung ke server Django di laptop sendiri, kasih alamatnya pas `flutter run`:
+
+```bash
+flutter run -d chrome --dart-define=API_BASE_URL=http://127.0.0.1:8000
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000   # emulator Android
+```
+
+Di emulator Android, `127.0.0.1` itu emulatornya sendiri, makanya pakai `10.0.2.2`. Kalau pakai Chrome, server Django-nya harus ngizinin CORS dulu biar request dari browser nggak ditolak.
+
+## Struktur Proyek
+
+```
+lib/
+├── main.dart          # titik masuk aplikasi
+├── core/              # dipakai bareng semua modul
+│   ├── api/           # ApiClient dan alamat server
+│   ├── theme/         # warna, tema, dan jarak Wiji
+│   └── widgets/       # tampilan loading, gagal, dan kosong
+└── features/
+    ├── home/          # beranda, drawer, dan daftar menu
+    ├── lahan/         # Modul A
+    ├── pemeriksaan/   # Modul B
+    ├── hasil/         # Modul C
+    ├── katalog/       # Modul D
+    └── rekomendasi/   # Modul E
+test/                  # test ApiClient, beranda, dan navigasi
+```
 
 ## Alur Kerja Tim
 

@@ -4,4 +4,7 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Cuma buat build debug: biar emulator bisa konek ke Django di laptop lewat
+         http://10.0.2.2:8000. APK rilis tetap cuma boleh HTTPS. -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>
