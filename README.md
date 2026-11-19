@@ -110,10 +110,17 @@ Semua endpoint ada di web Wiji, di bawah `/api/v1/`. Daftar lengkap (method, aks
 
 ## Alur Kerja Tim
 
-- `main` itu versi yang siap dikumpulin, `dev` tempat gabungin fitur.
-- Fitur baru dibikin di branch sendiri dari `dev` (contoh `feat/lahan-list`, `fix/pesanan-form`), terus PR ke `dev` dan di-review satu teman.
+```
+feat/...  ─┐
+fix/...   ─┼──►  dev  ──►  main
+docs/...  ─┘
+```
+
+- Branch baru selalu dari `dev`, terus PR ke `dev` dan di-review satu teman. Base PR di GitHub defaultnya `main`, jadi ganti dulu.
+- `dev` dibawa ke `main` cuma pas rilis (checkpoint atau pengumpulan), pakai merge commit.
+- Nggak ada commit langsung ke `dev` atau `main`.
 - Pesan commit pakai gaya conventional commit (`feat:`, `fix:`, `docs:`, `test:`, `style:`, `chore:`).
-- Pas mau ngumpulin, `dev` di-merge ke `main`.
+- Endpoint API dikerjain di repo proyek web, alurnya tetap langsung ke `main`.
 
 ## Tautan
 
