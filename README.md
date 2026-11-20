@@ -89,16 +89,31 @@ sequenceDiagram
 
 ## Endpoint API
 
-Semua endpoint ada di web Wiji, di bawah `/api/v1/`. Daftar lengkap (method, akses, dan target tiap checkpoint) ada di [docs/WORK-PLAN.md](docs/WORK-PLAN.md).
+Semua endpoint ada di web Wiji, di bawah `/api/v1/`, dan dibikin pakai Django REST Framework. Endpoint yang butuh login sementara pakai sesi login web. Login dari HP nyusul.
+
+### Udah jalan
+
+| Modul | Method | Endpoint | Akses | Fungsi |
+|---|---|---|---|---|
+| B. Pemesanan | GET | `jenis-pemeriksaan/` | Login | Pilihan jenis pemeriksaan yang aktif |
+| B. Pemesanan | GET | `pesanan/` | Pemilik | Pesanan sendiri, bisa difilter `?status=` |
+| B. Pemesanan | POST | `pesanan/` | Pemilik | Pesan pemeriksaan baru |
+| B. Pemesanan | GET | `pesanan/<id>/` | Pemilik | Detail pesanan plus riwayatnya |
+
+Cara nyoba: masuk lewat `/api-auth/login/` di web Wiji, terus buka alamat endpoint-nya. Yang keluar halaman Browsable API dari DRF.
+
+### Lagi dikerjain
 
 | Modul | Endpoint utama |
 |---|---|
 | Bersama | `auth/login/`, `auth/register/`, `auth/logout/`, `auth/me/` |
 | A. Lahan | `lahan/`, `lahan/<uuid>/`, `lahan/<uuid>/arsip/`, `lahan/<uuid>/pulihkan/`, `tujuan-pengelolaan/`, `lokasi/cari/` |
-| B. Pemesanan | `jenis-pemeriksaan/`, `pesanan/`, `pesanan/<id>/`, `pesanan/<id>/batalkan/`, `pesanan/<id>/jadwal-ulang/`, `tugas/`, `tugas/<id>/`, `tugas/<id>/lanjut/` |
+| B. Pemesanan | `pesanan/<id>/batalkan/`, `pesanan/<id>/jadwal-ulang/`, `tugas/`, `tugas/<id>/`, `tugas/<id>/lanjut/` |
 | C. Hasil | `hasil/`, `hasil/<id>/`, `hasil/<id>/unsur-hara/`, `hasil/<id>/kontaminan/`, `tugas/<pesanan_id>/hasil/`, `hasil/<id>/finalisasi/` |
 | D. Katalog | `tanaman/`, `tanaman/<id>/`, `tanaman/<id>/arsip/`, `tanaman/<id>/pulihkan/`, `jenis-kontaminan/` |
 | E. Rekomendasi | `lahan/<uuid>/hasil-final/`, `lahan/<uuid>/rekomendasi/`, `rencana/`, `rencana/<id>/` |
+
+Rincian tiap endpoint (method, akses, dan yang wajib jalan pas Checkpoint 1) ada di [docs/WORK-PLAN.md](docs/WORK-PLAN.md). Tabel "Udah jalan" diupdate tiap ada endpoint yang masuk.
 
 ## Teknologi
 
