@@ -41,6 +41,146 @@ Urusan admin yang lain (konfirmasi pesanan, nugasin petugas, jadwal final, bikin
 
 ---
 
+## Urutan Pengerjaan
+
+Kerjaannya dipecah jadi issue bernomor. Panah artinya "harus nunggu": issue di ujung panah baru bisa mulai kalau issue di pangkalnya udah merge. Panah putus-putus artinya cuma sebagian yang nunggu.
+
+```mermaid
+flowchart TD
+    I01["01 · Pasang DRF<br/>Osman · web"]
+    I02["02 · Kerangka Flutter<br/>Osman · mobile"]
+
+    subgraph API["API modul · repo web"]
+        I03["03 · API Lahan<br/>Rania"]
+        I04["04 · API Pemesanan<br/>Osman"]
+        I05["05 · API Hasil<br/>Nadya"]
+        I06["06 · API Katalog<br/>Yosua"]
+        I07["07 · API Rekomendasi<br/>Piedra"]
+    end
+
+    subgraph HAL["Halaman modul · repo mobile"]
+        I08["08 · Halaman Lahan<br/>Rania"]
+        I09["09 · Halaman Pemesanan<br/>Osman"]
+        I10["10 · Halaman Hasil<br/>Nadya"]
+        I11["11 · Halaman Katalog<br/>Yosua"]
+        I12["12 · Halaman Rekomendasi<br/>Piedra"]
+    end
+
+    I13(["13 · Rilis Checkpoint 1"])
+    I14["14 · Login dari HP<br/>Osman"]
+    I15["15 · Desain HP di Figma<br/>Semua"]
+
+    subgraph FULL["Modul lengkap · dua repo"]
+        I16["16 · Lahan lengkap<br/>Rania"]
+        I17["17 · Pemesanan lengkap<br/>Osman"]
+        I18["18 · Hasil lengkap<br/>Nadya"]
+        I19["19 · Katalog lengkap<br/>Yosua"]
+        I20["20 · Rekomendasi lengkap<br/>Piedra"]
+    end
+
+    I21["21 · Integrasi dan beresin bug<br/>Semua"]
+    I22["22 · Logo dan APK<br/>Osman"]
+    I23["23 · README final dan AI disclosure<br/>Semua"]
+    I24(["24 · Rilis akhir"])
+
+    I01 --> API
+    I02 --> HAL
+    I06 -.-> I11
+    API --> I13
+    HAL --> I13
+    I13 --> I14
+    I14 --> FULL
+    I15 --> FULL
+    I17 -.-> I18
+    I19 -.-> I20
+    FULL --> I21
+    I21 --> I22
+    I21 --> I23
+    I22 --> I24
+    I23 --> I24
+
+    classDef osman fill:#e4eee2,stroke:#2f6b3f,color:#1c2620
+    classDef rania fill:#f3e8dd,stroke:#8b5a3c,color:#1c2620
+    classDef nadya fill:#cfdfec,stroke:#2e5e86,color:#1c2620
+    classDef yosua fill:#f7e1dc,stroke:#a33a2c,color:#1c2620
+    classDef piedra fill:#f5ecd2,stroke:#8a5a0b,color:#1c2620
+    classDef semua fill:#f6f4ee,stroke:#4f5a52,color:#1c2620
+    classDef rilis fill:#142019,stroke:#142019,color:#ffffff
+    class I01,I02,I04,I09,I14,I17,I22 osman
+    class I03,I08,I16 rania
+    class I05,I10,I18 nadya
+    class I06,I11,I19 yosua
+    class I07,I12,I20 piedra
+    class I15,I21,I23 semua
+    class I13,I24 rilis
+```
+
+Warna = penanggung jawab: hijau Osman, cokelat Rania, biru Nadya, merah Yosua, kuning Piedra, abu-abu semua orang. Kotak hitam itu rilis.
+
+| No | Issue | PJ | Repo | Nunggu |
+|---|---|---|---|---|
+| 01 | Pasang DRF, rute `/api/v1/`, `api_urls.py` kosong di tiap app, permission bareng | Osman | web | – |
+| 02 | Kerangka Flutter: project, tema, `ApiClient`, drawer, beranda, halaman kosong tiap modul | Osman | mobile | – |
+| 03 | API Lahan, endpoint yang ✅ | Rania | web | 01 |
+| 04 | API Pemesanan, endpoint yang ✅ | Osman | web | 01 |
+| 05 | API Hasil, endpoint yang ✅ | Nadya | web | 01 |
+| 06 | API Katalog, endpoint yang ✅ | Yosua | web | 01 |
+| 07 | API Rekomendasi, endpoint yang ✅ | Piedra | web | 01 |
+| 08 | Halaman daftar lahan + model `Lahan` | Rania | mobile | 02 |
+| 09 | Halaman daftar pesanan | Osman | mobile | 02 |
+| 10 | Halaman daftar hasil | Nadya | mobile | 02 |
+| 11 | Halaman katalog pakai data asli | Yosua | mobile | 02, sebagian 06 |
+| 12 | Halaman daftar rencana | Piedra | mobile | 02 |
+| 13 | **Rilis Checkpoint 1** | Osman | mobile | 03 sampai 12 |
+| 14 | Login dari HP: endpoint auth, halaman masuk dan daftar, `ApiClient` bawa tanda login | Osman | dua-duanya | 13 |
+| 15 | Desain halaman HP di Figma, tiap orang bagian modulnya | Semua | Figma | – (boleh mulai kapan aja) |
+| 16 | Modul A lengkap (sesuai "Selesai kalau" di bawah) | Rania | dua-duanya | 14, 15 |
+| 17 | Modul B lengkap, termasuk tugas petugas | Osman | dua-duanya | 14, 15 |
+| 18 | Modul C lengkap | Nadya | dua-duanya | 14, 15, sebagian 17 (isi hasil petugas butuh tugas dari B) |
+| 19 | Modul D lengkap, termasuk kelola katalog admin | Yosua | dua-duanya | 14, 15 |
+| 20 | Modul E lengkap | Piedra | dua-duanya | 14, 15, sebagian 19 (tombol ke detail tanaman) |
+| 21 | Integrasi: coba alur pemilik dan petugas dari awal sampai akhir, cek data web ↔ HP, beresin bug | Semua | dua-duanya | 16 sampai 20 |
+| 22 | Logo aplikasi, build APK, GitHub Release, Bitrise | Osman | mobile | 21 |
+| 23 | README final dan AI disclosure | Semua | mobile | 21 |
+| 24 | **Rilis akhir** | Osman | mobile | 22, 23 |
+
+### Branch dan commit issue Checkpoint 1
+
+**01 · Pasang DRF** (web, branch `chore/add-drf`)
+1. `build: add django rest framework`
+2. `feat: prepare the api/v1 routes for every module`
+3. `feat: add shared api permissions and auth`
+
+**02 · Kerangka Flutter** (mobile, branch `chore/flutter-setup` lalu `feat/app-shell`)
+1. `chore: create the flutter project`
+2. `chore: use material_ui like in the tutorial`
+3. `feat: add the wiji theme from the web colors`
+4. `feat: add the shared api client`
+5. `feat: add a page for every module`
+6. `feat: add the drawer and home menu cards`
+7. `test: cover navigation between module pages`
+8. `docs: add how to run the app`
+
+**03 sampai 07 · API modul** (web, branch `feat/api-<modul>`, misalnya `feat/api-lahan`)
+1. `feat: add serializers for <modul>`
+2. `feat: add <modul> list and detail endpoints`
+3. `test: cover the <modul> api`
+
+Endpoint yang harus jalan ada di tabel modulmu (yang ✅).
+
+**08 sampai 12 · Halaman modul** (mobile, branch `feat/<modul>-list`, misalnya `feat/lahan-list`)
+1. `feat: add the <modul> model`
+2. `feat: add the <modul> list page`
+
+Halaman ini gantiin halaman kosong dari 02, jadi navigasinya udah nyambung. Datanya boleh contoh dulu, kecuali katalog (endpoint-nya publik, jadi langsung pakai data asli).
+
+**13 · Rilis Checkpoint 1**
+1. Cek tabel endpoint di README cuma nyebut yang udah jalan.
+2. PR `dev` → `main` dengan judul `chore: release checkpoint 1`.
+3. Kumpulin link repo ke SCELE.
+
+Cara ngecek endpoint udah jalan: login di web PWS, terus buka alamat endpoint-nya di browser. Harusnya muncul halaman Browsable API dari DRF, bukan 404.
+
 ## Aturan Bareng
 
 ### API DRF (repo `wiji`)
@@ -333,21 +473,6 @@ Dokumen laboratorium tetap diunggah dan diunduh lewat web.
 **Ide fitur tambahan (opsional):** bar skor kecocokan berwarna, pengingat tanggal tanam.
 
 ---
-
-## Checklist Checkpoint 1 per Orang
-
-Deadline internal: **Jumat 20 Nov jam 18.00**, biar sisa waktunya buat gabungin.
-
-| Siapa | Repo `wiji` (PR ke `main`) | Repo `wiji-mobile` (PR ke `dev`) |
-|---|---|---|
-| Osman (Bersama) | Pasang DRF, `/api/v1/`, permission bareng | Kerangka Flutter, tema, navigasi, README |
-| Osman (B) | Endpoint B yang ✅ plus test | Halaman daftar pesanan (boleh isi contoh dulu) |
-| Rania (A) | Endpoint A yang ✅ plus test | Halaman daftar lahan (boleh isi contoh dulu) |
-| Nadya (C) | Endpoint C yang ✅ plus test | Halaman daftar hasil (boleh isi contoh dulu) |
-| Yosua (D) | Endpoint D yang ✅ plus test | Halaman katalog. Endpoint-nya publik, jadi bisa langsung pakai data asli |
-| Piedra (E) | Endpoint E yang ✅ plus test | Halaman daftar rencana (boleh isi contoh dulu) |
-
-Cara ngecek endpoint udah jalan: login di web PWS, terus buka alamat endpoint-nya di browser. Harusnya muncul halaman Browsable API dari DRF, bukan 404.
 
 ## Yang Masih Perlu Disepakati
 

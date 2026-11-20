@@ -4,13 +4,13 @@
 
 **Kelompok:** D12 · **Kelas:** PBP-D · **Tema:** Sustainable Living · **Subtema:** Sustainable Soil and Land Management
 
-**Desain Figma:** _menyusul_ · **APK:** _menyusul setelah Checkpoint 1_
+**Repo web (Django):** [pbp-kelompok-d12/wiji](https://github.com/pbp-kelompok-d12/wiji) · **Desain Figma:** _menyusul_ · **APK:** _menyusul setelah Checkpoint 1_
 
 ## Tentang Aplikasi
 
 **Wiji Mobile** bantu petani dan pemilik lahan ngurus lahannya dari HP. Pengguna bisa nyatet lahan, mesen pemeriksaan tanah, liat hasilnya, terus dapet rekomendasi tanaman yang cocok sama kondisi tanah, cuaca, dan iklim lahannya. Tanaman yang dipilih bisa disimpen jadi rencana tanam.
 
-Aplikasi ini **nggak punya database sendiri**. Semua data tetap disimpan di proyek web Wiji (Django), terus diambil dan dikirim lewat API Django REST Framework. Jadi apa pun yang diubah di HP langsung keliatan di web, dan sebaliknya.
+Aplikasi ini **nggak punya database sendiri**. Semua data tetap disimpan di [proyek web Wiji](https://github.com/pbp-kelompok-d12/wiji) (Django), terus diambil dan dikirim lewat API Django REST Framework. Jadi apa pun yang diubah di HP langsung keliatan di web, dan sebaliknya.
 
 Nama **Wiji** dari bahasa Jawa, artinya benih.
 
@@ -89,24 +89,85 @@ sequenceDiagram
 
 ## Endpoint API
 
-Semua endpoint ada di web Wiji, di bawah `/api/v1/`. Daftar lengkap (method, akses, dan target tiap checkpoint) ada di [docs/WORK-PLAN.md](docs/WORK-PLAN.md).
+Semua endpoint ada di web Wiji, di bawah `/api/v1/`, dan dibikin pakai Django REST Framework. Endpoint yang butuh login sementara pakai sesi login web. Login dari HP nyusul.
+
+### Udah jalan
+
+| Modul | Method | Endpoint | Akses | Fungsi |
+|---|---|---|---|---|
+| B. Pemesanan | GET | `jenis-pemeriksaan/` | Login | Pilihan jenis pemeriksaan yang aktif |
+| B. Pemesanan | GET | `pesanan/` | Pemilik | Pesanan sendiri, bisa difilter `?status=` |
+| B. Pemesanan | POST | `pesanan/` | Pemilik | Pesan pemeriksaan baru |
+| B. Pemesanan | GET | `pesanan/<id>/` | Pemilik | Detail pesanan plus riwayatnya |
+
+Cara nyoba: masuk lewat `/api-auth/login/` di web Wiji, terus buka alamat endpoint-nya. Yang keluar halaman Browsable API dari DRF.
+
+### Lagi dikerjain
 
 | Modul | Endpoint utama |
 |---|---|
 | Bersama | `auth/login/`, `auth/register/`, `auth/logout/`, `auth/me/` |
 | A. Lahan | `lahan/`, `lahan/<uuid>/`, `lahan/<uuid>/arsip/`, `lahan/<uuid>/pulihkan/`, `tujuan-pengelolaan/`, `lokasi/cari/` |
-| B. Pemesanan | `jenis-pemeriksaan/`, `pesanan/`, `pesanan/<id>/`, `pesanan/<id>/batalkan/`, `pesanan/<id>/jadwal-ulang/`, `tugas/`, `tugas/<id>/`, `tugas/<id>/lanjut/` |
+| B. Pemesanan | `pesanan/<id>/batalkan/`, `pesanan/<id>/jadwal-ulang/`, `tugas/`, `tugas/<id>/`, `tugas/<id>/lanjut/` |
 | C. Hasil | `hasil/`, `hasil/<id>/`, `hasil/<id>/unsur-hara/`, `hasil/<id>/kontaminan/`, `tugas/<pesanan_id>/hasil/`, `hasil/<id>/finalisasi/` |
 | D. Katalog | `tanaman/`, `tanaman/<id>/`, `tanaman/<id>/arsip/`, `tanaman/<id>/pulihkan/`, `jenis-kontaminan/` |
 | E. Rekomendasi | `lahan/<uuid>/hasil-final/`, `lahan/<uuid>/rekomendasi/`, `rencana/`, `rencana/<id>/` |
+
+Rincian tiap endpoint (method, akses, dan yang wajib jalan pas Checkpoint 1) ada di [docs/WORK-PLAN.md](docs/WORK-PLAN.md). Tabel "Udah jalan" diupdate tiap ada endpoint yang masuk.
 
 ## Teknologi
 
 | Bagian | Yang dipakai |
 |---|---|
-| Aplikasi mobile | Flutter, Dart, `material_ui` |
+| Aplikasi mobile | Flutter 3.47, Dart 3.13, `material_ui`, `http` |
 | Web service | Django 5.2, Django REST Framework |
 | Build APK | GitHub Release dan Bitrise |
+
+## Menjalankan Secara Lokal
+
+Butuh Flutter 3.47 (Dart 3.13) atau lebih baru. Cek pakai `flutter --version`.
+
+```bash
+git clone https://github.com/pbp-kelompok-d12/wiji-mobile.git
+cd wiji-mobile
+flutter pub get
+flutter run              # pilih emulator Android, HP, atau Chrome
+```
+
+Ngecek kode sebelum bikin PR:
+
+```bash
+flutter analyze
+flutter test
+```
+
+Bawaannya aplikasi nyambung ke server Wiji. Kalau mau nyambung ke server Django di laptop sendiri, kasih alamatnya pas `flutter run`:
+
+```bash
+flutter run -d chrome --dart-define=API_BASE_URL=http://127.0.0.1:8000
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000   # emulator Android
+```
+
+Di emulator Android, `127.0.0.1` itu emulatornya sendiri, makanya pakai `10.0.2.2`. Kalau pakai Chrome, server Django-nya harus ngizinin CORS dulu biar request dari browser nggak ditolak.
+
+## Struktur Proyek
+
+```
+lib/
+├── main.dart          # titik masuk aplikasi
+├── core/              # dipakai bareng semua modul
+│   ├── api/           # ApiClient dan alamat server
+│   ├── theme/         # warna, tema, dan jarak Wiji
+│   └── widgets/       # tampilan loading, gagal, dan kosong
+└── features/
+    ├── home/          # beranda, drawer, dan daftar menu
+    ├── lahan/         # Modul A
+    ├── pemeriksaan/   # Modul B
+    ├── hasil/         # Modul C
+    ├── katalog/       # Modul D
+    └── rekomendasi/   # Modul E
+test/                  # test ApiClient, beranda, dan navigasi
+```
 
 ## Alur Kerja Tim
 
@@ -124,6 +185,7 @@ docs/...  ─┘
 
 ## Tautan
 
+- Repo web (Django dan API DRF): https://github.com/pbp-kelompok-d12/wiji
 - Rencana kerja: [docs/WORK-PLAN.md](docs/WORK-PLAN.md)
 - Figma: _menyusul_
 - APK: _menyusul_
