@@ -4,13 +4,13 @@
 
 **Kelompok:** D12 · **Kelas:** PBP-D · **Tema:** Sustainable Living · **Subtema:** Sustainable Soil and Land Management
 
-**Desain Figma:** _menyusul_ · **APK:** _menyusul setelah Checkpoint 1_
+**Repo web (Django):** [pbp-kelompok-d12/wiji](https://github.com/pbp-kelompok-d12/wiji) · **Desain Figma:** _menyusul_ · **APK:** _menyusul setelah Checkpoint 1_
 
 ## Tentang Aplikasi
 
 **Wiji Mobile** bantu petani dan pemilik lahan ngurus lahannya dari HP. Pengguna bisa nyatet lahan, mesen pemeriksaan tanah, liat hasilnya, terus dapet rekomendasi tanaman yang cocok sama kondisi tanah, cuaca, dan iklim lahannya. Tanaman yang dipilih bisa disimpen jadi rencana tanam.
 
-Aplikasi ini **nggak punya database sendiri**. Semua data tetap disimpan di proyek web Wiji (Django), terus diambil dan dikirim lewat API Django REST Framework. Jadi apa pun yang diubah di HP langsung keliatan di web, dan sebaliknya.
+Aplikasi ini **nggak punya database sendiri**. Semua data tetap disimpan di [proyek web Wiji](https://github.com/pbp-kelompok-d12/wiji) (Django), terus diambil dan dikirim lewat API Django REST Framework. Jadi apa pun yang diubah di HP langsung keliatan di web, dan sebaliknya.
 
 Nama **Wiji** dari bahasa Jawa, artinya benih.
 
@@ -170,6 +170,7 @@ docs/...  ─┘
 
 ## Tautan
 
+- Repo web (Django dan API DRF): https://github.com/pbp-kelompok-d12/wiji
 - Rencana kerja: [docs/WORK-PLAN.md](docs/WORK-PLAN.md)
 - Figma: _menyusul_
 - APK: _menyusul_
